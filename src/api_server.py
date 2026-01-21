@@ -14,7 +14,7 @@ from mootdx.logger import logger
 from mcp.server.fastmcp import FastMCP
 
 # 初始化 FastMCP
-mcp = FastMCP("kitetdx", streamable_http_path="/", sse_path="/")
+mcp = FastMCP("kitetdx", streamable_http_path="/", sse_path="/", stateless_http=True)
 
 # 创建 MCP 应用（先创建，以便在 lifespan 中使用）
 mcp_http_app = mcp.streamable_http_app()

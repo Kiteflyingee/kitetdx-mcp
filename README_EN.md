@@ -85,18 +85,20 @@ Add the following to your `claude_desktop_config.json`:
       "args": [
         "-y",
         "mcp-remote",
-        "http://<server-ip>:8010/sse/"
+        "--allow-http",
+        "http://<server-ip>:8010/mcp"
       ]
     }
   }
 }
 ```
 
-Replace `<server-ip>` with your actual IP address (e.g., `http://127.0.0.1:8010/sse/` for local).
+Replace `<server-ip>` with your actual IP address (e.g., `http://127.0.0.1:8010/mcp` for local).
 
 > **Note**:
-> - SSE Endpoint (Recommended for mcp-remote): `/sse/`
-> - Streamable HTTP Endpoint: `/mcp`
+> - The `--allow-http` flag is required when connecting to a remote (non-localhost) HTTP server.
+> - Streamable HTTP Endpoint (Current Config): `/mcp`
+> - SSE Endpoint: `/sse/`
 
 ## Available Tools
 
