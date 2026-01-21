@@ -6,7 +6,7 @@ readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
     "mcp[cli]>=1.0.0",
-    "kitetdx>=0.1.11",
+    "kitetdx>=0.1.12",
     "fastapi",
     "uvicorn",
     "apscheduler",
