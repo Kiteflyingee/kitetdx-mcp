@@ -1,64 +1,66 @@
 # kitetdx-mcp
 
-An MCP (Model Context Protocol) server for `kitetdx`, providing access to Chinese stock market data and financial reports for LLMs.
+[English](./README_EN.md) | 中文
 
-This server enables LLMs (like Claude) to:
-- Retrieve historical K-line data (daily, adjustable queries).
-- Access financial reports and fundamental data.
-- Automatically sync and update data daily.
+kitetdx 的 MCP (Model Context Protocol) 服务器，为 LLM 提供中国股票市场 K 线数据和财务数据访问能力。
 
-## Features
+该服务器允许 LLM（如 Claude）实现：
+- 获取历史日线 K 线数据（支持复权）。
+- 获取详细的财务报表数据。
+- 自动每日同步和更新数据。
 
-- **Daily K-line Data**: Get adjusted (QFQ/HFQ) or unadjusted daily stock prices.
-- **Financial Data**: Retrieve detailed financial reports (EPS, ROE, etc.). Automatically falls back to previous reports if the latest one contains no data for a specific stock.
-- **Automated Sync**: Scheduled tasks (default 18:00 daily) to keep local data fresh.
-- **Efficient Transport**: Uses Streamable HTTP transport for stable performance.
-- **Zero-Config Data**: Automatically downloads required data files on demand.
+## 功能特性
 
-## Prerequisites
+- **日线数据**：获取前复权(QFQ)、后复权(HFQ)或不复权的日线数据。
+- **财务数据**：获取详细财务指标（每股收益、净资产收益率等）。如果最新财报没有指定股票的数据，会自动向前查找最近可用的财报。
+- **自动同步**：内置定时任务（默认每天 18:00）保持本地数据新鲜。
+- **高效传输**：使用 Streamable HTTP 传输协议，性能更稳定。
+- **零配置数据**：按需自动下载所需的数据文件。
+
+## 环境要求
 
 - Python 3.10+
-- `uv` (recommended) or `pip`
+- `uv` (推荐) 或 `pip`
 
-## Installation
+## 安装指南
 
-### Method 1: Using `uv` (Recommended)
+### 方法 1: 使用 `uv` (推荐)
 
 ```bash
-# Clone the repository
+# 克隆仓库
 git clone <repository-url>
 cd kitetdx-mcp
 
-# Install dependencies and run
+# 安装依赖并运行
 uv run src/api_server.py
 ```
 
-### Method 2: Standard pip
+### 方法 2: 使用标准 pip
 
 ```bash
-# Clone the repository
+# 克隆仓库
 git clone <repository-url>
 cd kitetdx-mcp
 
-# Install requirements
+# 安装依赖
 pip install -r requirements.txt
 
-# Run the server
+# 运行服务器
 python src/api_server.py
 ```
 
-## Configuration
+## 配置说明
 
-The server runs on port `8010` by default. You can override settings using environment variables:
+服务器默认监听 `8010` 端口。可以通过环境变量修改配置：
 
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `KITETDX_API_PORT` | Server listening port | `8010` |
-| `KITETDX_DIR` | Data storage directory | `./data` |
+| 环境变量 | 描述 | 默认值 |
+|----------|------|--------|
+| `KITETDX_API_PORT` | 服务器监听端口 | `8010` |
+| `KITETDX_DIR` | 数据存储目录 | `./data` |
 
-### Claude Desktop Configuration
+### Claude Desktop 配置
 
-Configure the MCP server in your `claude_desktop_config.json`:
+在你的 `claude_desktop_config.json` 中添加如下配置：
 
 ```json
 {
@@ -76,7 +78,7 @@ Configure the MCP server in your `claude_desktop_config.json`:
 }
 ```
 
-Or if you prefer using `python` directly:
+或者直接使用 `python`：
 
 ```json
 {
@@ -91,38 +93,39 @@ Or if you prefer using `python` directly:
 }
 ```
 
-## Available Tools
+## 可用工具
 
 ### 1. `get_daily_kline`
 
-Get daily stock market K-line data.
+获取股票日线 K 线数据。
 
-- **Parameters**:
-  - `symbol` (string): Stock code (e.g., "000001").
-  - `adjust` (string, optional): Adjustment type ("qfq", "hfq", or null). Defaults to "qfq".
-  - `start_date` (string, optional): "YYYY-MM-DD".
-  - `end_date` (string, optional): "YYYY-MM-DD".
+- **参数**:
+  - `symbol` (string): 股票代码 (例如 "000001")。
+  - `adjust` (string, 可选): 复权方式 ("qfq", "hfq", 或 null)。默认为 "qfq"。
+  - `start_date` (string, 可选): 开始日期 "YYYY-MM-DD"。
+  - `end_date` (string, 可选): 结束日期 "YYYY-MM-DD"。
 
 ### 2. `get_financial_data`
 
-Get financial report data. Automatically finds the latest available report if not specified.
+获取财务报表数据。如果不指定日期，会自动查找最新可用的财报。
 
-- **Parameters**:
-  - `symbol` (string, optional): Filter by stock code (e.g., "000938").
-  - `report_date` (string, optional): Specific report date "YYYYMMDD" (e.g., "20241231").
+- **参数**:
+  - `symbol` (string, 可选): 股票代码过滤 (例如 "000938")。
+  - `report_date` (string, 可选): 指定财报日期 "YYYYMMDD" (例如 "20241231")。
 
-## Project Structure
+## 项目结构
 
 ```
 kitetdx-mcp/
 ├── src/
-│   └── api_server.py    # Main server implementation
-├── data/                # Data storage (auto-generated)
-├── pyproject.toml       # Project configuration
-├── requirements.txt     # Dependency list
-└── README.md
+│   └── api_server.py    # 服务器核心实现
+├── data/                # 数据存储目录 (自动生成)
+├── pyproject.toml       # 项目配置
+├── requirements.txt     # 依赖列表
+├── README.md            # 中文文档
+└── README_EN.md         # English Documentation
 ```
 
-## License
+## 许可证
 
 MIT
