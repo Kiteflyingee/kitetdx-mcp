@@ -60,38 +60,44 @@ python src/api_server.py
 
 ### Claude Desktop 配置
 
-在你的 `claude_desktop_config.json` 中添加如下配置：
+本服务器使用 Streamable HTTP 传输协议。你需要先在服务器上启动 `api_server.py`，然后通过 `mcp-remote` 连接。
+
+#### 1. 启动服务器
+
+在服务器上运行：
+
+```bash
+# 使用 uv
+uv run src/api_server.py
+
+# 或使用 python
+python src/api_server.py
+```
+
+服务器将在 `http://<server-ip>:8010` 上监听。
+
+#### 2. 配置 Claude Desktop
+
+在你的 `claude_desktop_config.json` 中添加如下配置，使用 `mcp-remote` 连接远程服务器：
 
 ```json
 {
   "mcpServers": {
     "kitetdx": {
-      "command": "/path/to/uv",
+      "command": "npx",
       "args": [
-        "run",
-        "--directory",
-        "/absolute/path/to/kitetdx-mcp",
-        "src/api_server.py"
+        "-y",
+        "mcp-remote",
+        "http://<server-ip>:8010/mcp"
       ]
     }
   }
 }
 ```
 
-或者直接使用 `python`：
+将 `<server-ip>` 替换为你的服务器 IP 地址，例如 `http://192.168.1.100:8010/mcp`。
 
-```json
-{
-  "mcpServers": {
-    "kitetdx": {
-      "command": "/path/to/python",
-      "args": [
-        "/absolute/path/to/kitetdx-mcp/src/api_server.py"
-      ]
-    }
-  }
-}
-```
+> **注意**: MCP 端点路径是 `/mcp`，不是 `/mcp/sse` 或 `/mcp/mcp`。
 
 ## 可用工具
 
