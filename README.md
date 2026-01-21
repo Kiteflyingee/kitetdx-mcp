@@ -19,7 +19,7 @@
 
 ## 环境要求
 
-- Python 3.10+
+- Python 3.10 - 3.12 (推荐)
 - `uv` (推荐) 或 `pip`
 
 ## 安装指南
@@ -31,8 +31,8 @@
 git clone <repository-url>
 cd kitetdx-mcp
 
-# 安装依赖并运行
-uv run src/api_server.py
+# 安装依赖并运行 (推荐指定 Python 版本)
+uv run --python 3.10 src/api_server.py
 ```
 
 ### 方法 2: 使用标准 pip
@@ -67,8 +67,8 @@ python src/api_server.py
 在服务器上运行：
 
 ```bash
-# 使用 uv
-uv run src/api_server.py
+# 使用 uv (推荐)
+uv run --python 3.10 src/api_server.py
 
 # 或使用 python
 python src/api_server.py

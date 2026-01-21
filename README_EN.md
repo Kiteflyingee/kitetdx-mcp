@@ -17,7 +17,7 @@ This server enables LLMs (like Claude) to:
 
 ## Prerequisites
 
-- Python 3.10+
+- Python 3.10 - 3.12 (Recommended)
 - `uv` (recommended) or `pip`
 
 ## Installation
@@ -29,8 +29,8 @@ This server enables LLMs (like Claude) to:
 git clone <repository-url>
 cd kitetdx-mcp
 
-# Install dependencies and run
-uv run src/api_server.py
+# Install dependencies and run (Recommend specifying Python version)
+uv run --python 3.10 src/api_server.py
 ```
 
 ### Method 2: Standard pip
@@ -64,8 +64,8 @@ This server uses SSE and Streamable HTTP. You need to start `api_server.py` on y
 Run on your machine:
 
 ```bash
-# Using uv
-uv run src/api_server.py
+# Using uv (Recommended)
+uv run --python 3.10 src/api_server.py
 
 # Or using python
 python src/api_server.py
