@@ -88,16 +88,18 @@ python src/api_server.py
       "args": [
         "-y",
         "mcp-remote",
-        "http://<server-ip>:8010/mcp"
+        "http://<server-ip>:8010/sse/"
       ]
     }
   }
 }
 ```
 
-将 `<server-ip>` 替换为你的服务器 IP 地址，例如 `http://192.168.1.100:8010/mcp`。
+将 `<server-ip>` 替换为你的服务器 IP 地址，例如 `http://192.168.1.100:8010/sse/`。
 
-> **注意**: MCP 端点路径是 `/mcp`，不是 `/mcp/sse` 或 `/mcp/mcp`。
+> **注意**: 
+> - SSE 端点 (推荐用于 mcp-remote): `/sse/`
+> - Streamable HTTP 端点: `/mcp`
 
 ## 可用工具
 

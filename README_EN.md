@@ -57,39 +57,46 @@ The server runs on port `8010` by default. You can override settings using envir
 | `KITETDX_DIR` | Data storage directory | `./data` |
 
 ### Claude Desktop Configuration
+This server uses SSE and Streamable HTTP. You need to start `api_server.py` on your server/local machine first, and then connect using `mcp-remote`.
 
-Configure the MCP server in your `claude_desktop_config.json`:
+#### 1. Start the Server
+
+Run on your machine:
+
+```bash
+# Using uv
+uv run src/api_server.py
+
+# Or using python
+python src/api_server.py
+```
+
+The server will listen at `http://<server-ip>:8010`.
+
+#### 2. Configure Claude Desktop
+
+Add the following to your `claude_desktop_config.json`:
 
 ```json
 {
   "mcpServers": {
     "kitetdx": {
-      "command": "/path/to/uv",
+      "command": "npx",
       "args": [
-        "run",
-        "--directory",
-        "/absolute/path/to/kitetdx-mcp",
-        "src/api_server.py"
+        "-y",
+        "mcp-remote",
+        "http://<server-ip>:8010/sse/"
       ]
     }
   }
 }
 ```
 
-Or if you prefer using `python` directly:
+Replace `<server-ip>` with your actual IP address (e.g., `http://127.0.0.1:8010/sse/` for local).
 
-```json
-{
-  "mcpServers": {
-    "kitetdx": {
-      "command": "/path/to/python",
-      "args": [
-        "/absolute/path/to/kitetdx-mcp/src/api_server.py"
-      ]
-    }
-  }
-}
-```
+> **Note**:
+> - SSE Endpoint (Recommended for mcp-remote): `/sse/`
+> - Streamable HTTP Endpoint: `/mcp`
 
 ## Available Tools
 

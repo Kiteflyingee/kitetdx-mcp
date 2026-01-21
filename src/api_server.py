@@ -14,10 +14,11 @@ from mootdx.logger import logger
 from mcp.server.fastmcp import FastMCP
 
 # 初始化 FastMCP
-mcp = FastMCP("kitetdx")
+mcp = FastMCP("kitetdx", streamable_http_path="/", sse_path="/")
 
 # 创建 MCP 应用（先创建，以便在 lifespan 中使用）
-mcp_app = mcp.streamable_http_app()
+mcp_http_app = mcp.streamable_http_app()
+mcp_sse_app = mcp.sse_app()
 
 # 创建 lifespan 上下文管理器
 @contextlib.asynccontextmanager
@@ -252,8 +253,10 @@ def get_financial_data_tool(
         return f"获取财务数据失败: {str(e)}"
 
 # --- Mount MCP Server ---
-# 将 MCP streamable HTTP 应用挂载到 FastAPI
-app.mount("/mcp", mcp_app)
+# 将 MCP streamable HTTP 应用挂载到 FastAPI /mcp
+app.mount("/mcp", mcp_http_app)
+# 将 MCP SSE 应用挂载到 FastAPI /sse
+app.mount("/sse", mcp_sse_app)
 
 # --- Original API Endpoints ---
 async def get_daily_kline(
