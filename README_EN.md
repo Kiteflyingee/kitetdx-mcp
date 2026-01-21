@@ -1,6 +1,6 @@
 # kitetdx-mcp
 
-An MCP (Model Context Protocol) server for `kitetdx`, providing access to Chinese stock market data and financial reports for LLMs.
+An MCP (Model Context Protocol) server for [kitetdx](https://github.com/Kiteflyingee/kitetdx), providing access to Chinese stock market data and financial reports for LLMs.
 
 This server enables LLMs (like Claude) to:
 - Retrieve historical K-line data (daily, adjustable queries).

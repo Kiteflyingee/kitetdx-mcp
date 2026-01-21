@@ -2,7 +2,7 @@
 
 [English](./README_EN.md) | 中文
 
-kitetdx 的 MCP (Model Context Protocol) 服务器，为 LLM 提供中国股票市场 K 线数据和财务数据访问能力。
+[kitetdx](https://github.com/Kiteflyingee/kitetdx) 的 MCP (Model Context Protocol) 服务器，为 LLM 提供中国股票市场 K 线数据和财务数据访问能力。
 
 该服务器允许 LLM（如 Claude）实现：
 - 获取历史日线 K 线数据（支持复权）。
