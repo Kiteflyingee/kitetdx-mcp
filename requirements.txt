@@ -1,5 +1,5 @@
 mcp[cli]>=1.0.0
-kitetdx>=0.1.10
+kitetdx>=0.1.11
 fastapi
 uvicorn
 apscheduler
