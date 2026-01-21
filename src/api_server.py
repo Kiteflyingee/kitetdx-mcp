@@ -113,11 +113,12 @@ def check_and_download_financial_data():
         "missing": missing_files
     }
 
-def scheduled_update():
-    """定时更新任务"""
-    logger.info("开始执行定时数据更新任务 (18:00)...")
+def run_global_update():
+    """执行全局数据更新任务 (K线 + 财务)"""
+    logger.info("开始执行全局数据更新任务...")
     try:
         # 更新 K 线数据
+        logger.info("正在更新 K 线数据...")
         reader.update_data()
         logger.info("K 线数据更新完成")
         
@@ -125,12 +126,16 @@ def scheduled_update():
         result = check_and_download_financial_data()
         logger.info(f"财务数据更新结果: {result}")
         
-        logger.info("定时数据更新任务完成")
+        logger.info("全局数据更新任务完成")
     except Exception as e:
-        logger.error(f"定时数据更新任务失败: {e}")
+        logger.error(f"全局数据更新任务失败: {e}")
 
 # 每晚 18:00 执行更新
-scheduler.add_job(scheduled_update, 'cron', hour=18, minute=0)
+scheduler.add_job(run_global_update, 'cron', hour=18, minute=0)
+
+# 启动时立即执行一次全量更新 (延迟 5 秒)
+scheduler.add_job(run_global_update, 'date', run_date=datetime.datetime.now() + datetime.timedelta(seconds=5))
+
 scheduler.start()
 
 

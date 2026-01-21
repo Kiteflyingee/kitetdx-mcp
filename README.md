@@ -57,6 +57,11 @@ python src/api_server.py
 |----------|------|--------|
 | `KITETDX_API_PORT` | 服务器监听端口 | `8010` |
 | `KITETDX_DIR` | 数据存储目录 | `./data` |
+| `KITETDX_ALLOW_ORIGINS` | 允许的跨域来源 | `*` (默认) |
+
+### 安全说明
+
+为了支持从任意 IP 地址（包括 Docker 容器或局域网设备）访问，本服务器默认禁用了 **DNS Rebinding 保护**。请仅在受信任的网络环境中使用。
 
 ### Claude Desktop 配置
 
@@ -88,6 +93,7 @@ python src/api_server.py
       "args": [
         "-y",
         "mcp-remote",
+        "--allow-http",
         "http://<server-ip>:8010/sse/"
       ]
     }
@@ -98,7 +104,8 @@ python src/api_server.py
 将 `<server-ip>` 替换为你的服务器 IP 地址，例如 `http://192.168.1.100:8010/sse/`。
 
 > **注意**: 
-> - SSE 端点 (推荐用于 mcp-remote): `/sse/`
+> - 连接远程服务器（非 localhost）时必须添加 `--allow-http` 参数。
+> - SSE 端点 (推荐配置): `/sse/`
 > - Streamable HTTP 端点: `/mcp`
 
 ## 可用工具
