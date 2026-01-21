@@ -1,88 +1,128 @@
-# kitetdx MCP Server
+# kitetdx-mcp
 
-为 kitetdx 提供 MCP (Model Context Protocol) 服务，使 LLM 能够访问 A 股 K 线数据和财务报表。
+An MCP (Model Context Protocol) server for `kitetdx`, providing access to Chinese stock market data and financial reports for LLMs.
 
-**支持局域网共享** - 您运行 API 服务器，局域网伙伴配置 MCP Wrapper 即可使用。
+This server enables LLMs (like Claude) to:
+- Retrieve historical K-line data (daily, adjustable queries).
+- Access financial reports and fundamental data.
+- Automatically sync and update data daily.
 
----
+## Features
 
-## 架构
+- **Daily K-line Data**: Get adjusted (QFQ/HFQ) or unadjusted daily stock prices.
+- **Financial Data**: Retrieve detailed financial reports (EPS, ROE, etc.). Automatically falls back to previous reports if the latest one contains no data for a specific stock.
+- **Automated Sync**: Scheduled tasks (default 18:00 daily) to keep local data fresh.
+- **Efficient Transport**: Uses Streamable HTTP transport for stable performance.
+- **Zero-Config Data**: Automatically downloads required data files on demand.
 
-```
-┌─────────────────────────────────────────────────────────┐
-│                    服务器端 (您的电脑)                    │
-│  ┌─────────────────────────────────────────────────┐   │
-│  │  FastAPI HTTP Server (端口 8000)                 │   │
-│  │  - /api/daily_kline                              │   │
-│  │  - /api/financial_data                           │   │
-│  └─────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────┘
-                          │
-                          │ HTTP (局域网)
-                          ▼
-              ┌───────────────────────┐
-              │  局域网伙伴的电脑      │
-              │  Claude Desktop       │
-              │    + MCP Wrapper      │
-              └───────────────────────┘
-```
+## Prerequisites
 
----
+- Python 3.10+
+- `uv` (recommended) or `pip`
 
-## 服务器端 (您的电脑)
+## Installation
 
-### 启动 API 服务器
+### Method 1: Using `uv` (Recommended)
+
 ```bash
-conda activate ai_trade
+# Clone the repository
+git clone <repository-url>
 cd kitetdx-mcp
-export KITETDX_DIR="/stock/new_tdx"
-python src/kitetdx_mcp/api_server.py
+
+# Install dependencies and run
+uv run src/api_server.py
 ```
 
-服务器将在 `http://YOUR_IP:8010` 上运行。
+### Method 2: Standard pip
 
-### 验证
+```bash
+# Clone the repository
+git clone <repository-url>
+cd kitetdx-mcp
 
-浏览器访问 `http://localhost:8010/docs` 查看 API 文档。
+# Install requirements
+pip install -r requirements.txt
 
----
+# Run the server
+python src/api_server.py
+```
 
-## Claude Desktop 配置 (推荐)
+## Configuration
 
-使用 SSE (Server-Sent Events) 方式配置，无需下载任何脚本，直接连接服务器。
+The server runs on port `8010` by default. You can override settings using environment variables:
 
-编辑 `~/Library/Application Support/Claude/claude_desktop_config.json`:
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `KITETDX_API_PORT` | Server listening port | `8010` |
+| `KITETDX_DIR` | Data storage directory | `./data` |
+
+### Claude Desktop Configuration
+
+Configure the MCP server in your `claude_desktop_config.json`:
 
 ```json
 {
   "mcpServers": {
     "kitetdx": {
-      "url": "http://服务器IP:8010/sse"
+      "command": "/path/to/uv",
+      "args": [
+        "run",
+        "--directory",
+        "/absolute/path/to/kitetdx-mcp",
+        "src/api_server.py"
+      ]
     }
   }
 }
 ```
 
-> 将 `服务器IP` 替换为运行 API 服务器的电脑 IP 地址。
+Or if you prefer using `python` directly:
 
----
-
-## 提供的 Tools
-
-| Tool | 功能 |
-| :--- | :--- |
-| `get_daily_kline` | 获取股票日线数据 (支持前/后复权) |
-| `get_financial_data` | 获取指定报告期财务数据 |
-
----
-
-## 开发与脚本运行 (Legacy)
-
-如果您仍想通过本地脚本运行 MCP (stdio 模式):
-
-```bash
-conda activate ai_trade
-python src/kitetdx_mcp/api_server.py # 必须先启动服务器
+```json
+{
+  "mcpServers": {
+    "kitetdx": {
+      "command": "/path/to/python",
+      "args": [
+        "/absolute/path/to/kitetdx-mcp/src/api_server.py"
+      ]
+    }
+  }
+}
 ```
 
-> **注意**：默认情况下，程序会在当前目录下创建 `data` 文件夹作为数据存储目录。
+## Available Tools
+
+### 1. `get_daily_kline`
+
+Get daily stock market K-line data.
+
+- **Parameters**:
+  - `symbol` (string): Stock code (e.g., "000001").
+  - `adjust` (string, optional): Adjustment type ("qfq", "hfq", or null). Defaults to "qfq".
+  - `start_date` (string, optional): "YYYY-MM-DD".
+  - `end_date` (string, optional): "YYYY-MM-DD".
+
+### 2. `get_financial_data`
+
+Get financial report data. Automatically finds the latest available report if not specified.
+
+- **Parameters**:
+  - `symbol` (string, optional): Filter by stock code (e.g., "000938").
+  - `report_date` (string, optional): Specific report date "YYYYMMDD" (e.g., "20241231").
+
+## Project Structure
+
+```
+kitetdx-mcp/
+├── src/
+│   └── api_server.py    # Main server implementation
+├── data/                # Data storage (auto-generated)
+├── pyproject.toml       # Project configuration
+├── requirements.txt     # Dependency list
+└── README.md
+```
+
+## License
+
+MIT

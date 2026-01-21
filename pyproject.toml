@@ -10,6 +10,7 @@ dependencies = [
     "fastapi",
     "uvicorn",
     "apscheduler",
+    "pandas",
 ]
 
 [build-system]
