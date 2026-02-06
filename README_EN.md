@@ -120,6 +120,42 @@ Get financial report data. Automatically finds the latest available report if no
   - `symbol` (string, optional): Filter by stock code (e.g., "000938").
   - `report_date` (string, optional): Specific report date "YYYYMMDD" (e.g., "20241231").
 
+### 3. `get_industries`
+
+Get industry classification list (supports SWS and TDX).
+
+- **Parameters**:
+  - `source` (string, optional): Data source, "tdx" (TongdaXin) or "sws" (Shenwan). Defaults to "tdx".
+  - `level` (int, optional): Industry level, 1 (Level 1) or 2 (Level 2). Defaults to 1.
+
+### 4. `get_industry_stocks`
+
+Get the list of constituent stocks for a specific industry.
+
+- **Parameters**:
+  - `industry_code` (string): Industry code (Txxxx), Block code (88xxxx), or Industry Name.
+  - `source` (string, optional): Data source, "tdx" or "sws". Defaults to "tdx".
+
+### 5. `get_stock_industry`
+
+Get industry information for a specific stock.
+
+- **Parameters**:
+  - `stock_code` (string): Stock code.
+  - `source` (string, optional): Data source, "tdx" or "sws". Defaults to "tdx".
+
+### 6. `get_concept_blocks`
+
+Get TDX local block and concept data.
+
+- **Parameters**:
+  - `concept_type` (string, optional): Filter type: "GN" (Concept), "FG" (Style), "ZS" (Index). Defaults to "GN".
+
+### 7. `update_sws_data`
+
+Manually update Shenwan (SWS) industry data. No parameters.
+
+
 ## Project Structure
 
 ```

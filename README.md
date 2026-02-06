@@ -128,6 +128,42 @@ python src/api_server.py
   - `symbol` (string, 可选): 股票代码过滤 (例如 "000938")。
   - `report_date` (string, 可选): 指定财报日期 "YYYYMMDD" (例如 "20241231")。
 
+### 3. `get_industries`
+
+获取行业分类列表 (支持申万和通达信)。
+
+- **参数**:
+  - `source` (string, 可选): 数据源，"tdx" (通达信) 或 "sws" (申万)。默认为 "tdx"。
+  - `level` (int, 可选): 行业级别，1 (一级) 或 2 (二级)。默认为 1。
+
+### 4. `get_industry_stocks`
+
+获取指定行业的成分股列表。
+
+- **参数**:
+  - `industry_code` (string): 行业代码 (Txxxx)、板块代码 (88xxxx) 或行业名称。
+  - `source` (string, 可选): 数据源，"tdx" 或 "sws"。默认为 "tdx"。
+
+### 5. `get_stock_industry`
+
+获取指定股票的所属行业信息。
+
+- **参数**:
+  - `stock_code` (string): 股票代码。
+  - `source` (string, 可选): 数据源，"tdx" 或 "sws"。默认为 "tdx"。
+
+### 6. `get_concept_blocks`
+
+获取通达信本地板块与概念数据。
+
+- **参数**:
+  - `concept_type` (string, 可选): 筛选类型: "GN" (概念), "FG" (风格), "ZS" (指数)。默认为 "GN"。
+
+### 7. `update_sws_data`
+
+手动更新申万行业数据。无参数。
+
+
 ## 项目结构
 
 ```

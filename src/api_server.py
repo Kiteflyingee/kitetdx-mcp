@@ -122,6 +122,14 @@ def run_global_update():
         reader.update_data()
         logger.info("K 线数据更新完成")
         
+        # 更新申万行业数据
+        logger.info("正在更新申万行业数据...")
+        try:
+            reader.update_sws_data()
+            logger.info("申万行业数据更新完成")
+        except Exception as e:
+            logger.error(f"申万行业数据更新失败: {e}")
+        
         # 检查并下载缺失的财务数据
         result = check_and_download_financial_data()
         logger.info(f"财务数据更新结果: {result}")
@@ -264,6 +272,106 @@ def get_financial_data_tool(
     except Exception as e:
         logger.exception("获取财务数据失败")
         return f"获取财务数据失败: {str(e)}"
+
+@mcp.tool(name="update_sws_data")
+def update_sws_data_tool() -> str:
+    """
+    手动更新申万行业数据
+    """
+    try:
+        reader.update_sws_data()
+        return "申万行业数据更新成功"
+    except Exception as e:
+        logger.error(f"申万行业数据更新失败: {e}")
+        return f"申万行业数据更新失败: {str(e)}"
+
+@mcp.tool(name="get_industries")
+def get_industries_tool(
+    source: str = 'tdx',
+    level: int = 1
+) -> str:
+    """
+    获取行业分类列表
+    
+    Args:
+        source: 数据源，'tdx' (通达信) 或 'sws' (申万)
+        level: 行业级别，1 (一级) 或 2 (二级)
+    """
+    try:
+        df = reader.get_industries(source=source, level=level)
+        if df is None or df.empty:
+            return "未找到行业数据"
+            
+        import json
+        return json.dumps(df.to_dict(orient="records"), ensure_ascii=False)
+    except Exception as e:
+        return f"获取行业列表失败: {str(e)}"
+
+@mcp.tool(name="get_industry_stocks")
+def get_industry_stocks_tool(
+    industry_code: str,
+    source: str = 'tdx'
+) -> str:
+    """
+    获取指定行业的成分股列表
+    
+    Args:
+        industry_code: 行业代码 (Txxxx)、板块代码 (88xxxx) 或行业名称
+        source: 数据源，'tdx' (通达信) 或 'sws' (申万)
+    """
+    try:
+        stocks = reader.get_industry_stocks(industry_code=industry_code, source=source)
+        if not stocks:
+            return f"未找到行业 {industry_code} 的成分股"
+            
+        import json
+        return json.dumps(stocks, ensure_ascii=False)
+    except Exception as e:
+        return f"获取行业成分股失败: {str(e)}"
+
+@mcp.tool(name="get_stock_industry")
+def get_stock_industry_tool(
+    stock_code: str,
+    source: str = 'tdx'
+) -> str:
+    """
+    获取指定股票的所属行业信息
+    
+    Args:
+        stock_code: 股票代码
+        source: 数据源，'tdx' (通达信) 或 'sws' (申万)
+    """
+    try:
+        info = reader.get_stock_industry(stock_code=stock_code, source=source)
+        if not info:
+            return f"未找到股票 {stock_code} 的行业信息"
+            
+        import json
+        return json.dumps(info, ensure_ascii=False)
+    except Exception as e:
+        return f"获取股票行业信息失败: {str(e)}"
+
+@mcp.tool(name="get_concept_blocks")
+def get_concept_blocks_tool(
+    concept_type: str = 'GN'
+) -> str:
+    """
+    获取通达信本地板块与概念数据
+    
+    Args:
+        concept_type: 筛选类型: 'GN' (概念), 'FG' (风格), 'ZS' (指数)
+    """
+    try:
+        df = reader.block(concept_type=concept_type)
+        if df is None or df.empty:
+            return f"未找到类型为 {concept_type} 的板块数据"
+            
+        # 结果可能很大，仅返回前 1000 条或进行适当处理
+        # 这里为了演示，返回前 2000 条
+        import json
+        return json.dumps(df.head(2000).to_dict(orient="records"), ensure_ascii=False)
+    except Exception as e:
+        return f"获取板块数据失败: {str(e)}"
 
 # --- Mount MCP Server ---
 # 将 MCP streamable HTTP 应用挂载到 FastAPI /mcp
