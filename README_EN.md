@@ -11,6 +11,7 @@ This server enables LLMs (like Claude) to:
 
 - **Daily K-line Data**: Get adjusted (QFQ/HFQ) or unadjusted daily stock prices.
 - **Financial Data**: Retrieve detailed financial reports (EPS, ROE, etc.). Automatically falls back to previous reports if the latest one contains no data for a specific stock.
+- **Industry Classification**: Supports TDX and SWS industry classification with standardized return formats (level 1 & 2).
 - **Automated Sync**: Scheduled tasks (default 18:00 daily) to keep local data fresh.
 - **Efficient Transport**: Uses Streamable HTTP transport for stable performance.
 - **Zero-Config Data**: Automatically downloads required data files on demand.

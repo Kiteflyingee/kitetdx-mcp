@@ -164,6 +164,9 @@ def get_daily_kline_tool(
         adjust: 复权方式，'qfq' 前复权，'hfq' 后复权，None 不复权
         start_date: 开始日期，格式 'YYYY-MM-DD'，可选
         end_date: 结束日期，格式 'YYYY-MM-DD'，可选
+        
+    Note:
+        返回的数据按日期从小到大(升序)排列。
     """
     try:
         df = reader.daily(symbol=symbol, adjust=adjust)
@@ -340,6 +343,12 @@ def get_stock_industry_tool(
     Args:
         stock_code: 股票代码
         source: 数据源，'tdx' (通达信) 或 'sws' (申万)
+        
+    Returns:
+        JSON 格式的行业信息，包含:
+        - industry: 一级行业名称
+        - industry_code: 一级行业代码
+        - sub_industry: 二级行业名称
     """
     try:
         info = reader.get_stock_industry(stock_code=stock_code, source=source)
@@ -386,7 +395,11 @@ async def get_daily_kline(
     start_date: Optional[str] = None,
     end_date: Optional[str] = None
 ):
-    """获取股票日线数据"""
+    """
+    获取股票日线数据
+    
+    返回的数据按日期从小到大(升序)排列。
+    """
     try:
         # 获取 K 线数据，reader.daily 已处理复权
         df = reader.daily(symbol=symbol, adjust=adjust)
